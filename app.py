@@ -31,6 +31,14 @@ def form():
 def submit():
     os.makedirs(DATA_FOLDER, exist_ok=True)
     os.makedirs(ARCHIVE_FOLDER, exist_ok=True)
+    
+@app.route("/list")
+def list_files():
+    if os.path.exists(DATA_FOLDER):
+        files = os.listdir(DATA_FOLDER)
+        return "<br>".join(files)
+    return "❌ No data folder found"
+
 
     new_file = os.path.join(DATA_FOLDER, get_excel_filename())
 
