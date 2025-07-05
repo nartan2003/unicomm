@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client Dashboard – Unicommerce</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .download-button {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      float: right;
+      margin: 10px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 40px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧾 Client Dashboard – Weekly Updates</h1>
+
+  <a href="/download" class="download-button">⬇️ Download This Week’s Excel</a>
+
+  <form action="/submit" method="POST">
+    <label>Tenant Name</label>
+    <input type="text" name="tenant_name" required>
+
+    <label>Tenant Code</label>
+    <input type="text" name="tenant_code" required>
+
+    <label>Golive AM</label>
+    <input type="text" name="golive_am" required>
+
+    <label>Go Live Manager</label>
+    <input type="text" name="golive_mgr" required>
+
+    <label>Status</label>
+    <select name="status" required>
+      <option value="">-- Select Status --</option>
+      <option>Pending</option>
+      <option>In Progress</option>
+      <option>Live</option>
+      <option>Blocked</option>
+    </select>
+
+    <label>Dashboard Status</label>
+    <input type="text" name="dashboard_status" required>
+
+    <label>Remarks</label>
+    <textarea name="remarks" rows="3"></textarea>
+
+    <button type="submit">➕ Submit Update</button>
+  </form>
+
+  <!-- {% if table_data %}
+    <table>
+      <thead>
+        <tr>
+          <th>Tenant Name</th>
+          <th>Tenant Code</th>
+          <th>Golive AM</th>
+          <th>Go Live Mgr</th>
+          <th>Status</th>
+          <th>Dashboard Status</th>
+          <th>Remarks</th>
+        </tr>
+      </thead> -->
+      <!-- <tbody>
+        {% for row in table_data %}
+          <tr>
+            <td>{{ row["Tenant Name"] }}</td>
+            <td>{{ row["Tenant Code"] }}</td>
+            <td>{{ row["Golive AM"] }}</td>
+            <td>{{ row["Go Live Mgr"] }}</td>
+            <td>{{ row["Current_Status"] }}</td>
+            <td>{{ row["Dashboard Status"] }}</td>
+            <td>{{ row["Remarks"] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody> -->
+    <!-- </table> -->
+  <!-- {% else %}
+    <p style="text-align:center; color:#888;">No entries submitted yet this week.</p>
+  {% endif %} -->
+
+</body>
+</html>
