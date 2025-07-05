@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 import pandas as pd
 import os
 import shutil
@@ -8,23 +8,19 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 
 app = Flask(__name__)
 
-# Generate filename based on current ISO week
+# Folders
+DATA_FOLDER = "data"
+ARCHIVE_FOLDER = "archive"
+COLUMNS = [
+    "Tenant Name", "Tenant Code", "Golive AM", "Go Live Mgr",
+    "Current_Status", "Dashboard Status", "Remarks"
+]
+
+# Generate Excel file name based on current week
 def get_excel_filename():
     week = datetime.now().isocalendar().week
     year = datetime.now().year
     return f"dashboard_{year}-W{week}.xlsx"
-
-DATA_FOLDER = "data"
-ARCHIVE_FOLDER = "archive"
-COLUMNS = [
-    "Tenant Name",
-    "Tenant Code",
-    "Golive AM",
-    "Go Live Mgr",
-    "Current_Status",
-    "Dashboard Status",
-    "Remarks"
-]
 
 @app.route("/")
 def form():
@@ -36,10 +32,9 @@ def submit():
     os.makedirs(DATA_FOLDER, exist_ok=True)
     os.makedirs(ARCHIVE_FOLDER, exist_ok=True)
 
-    # Determine file path
     new_file = os.path.join(DATA_FOLDER, get_excel_filename())
 
-    # Move any old Excel files to archive (if not current week)
+    # Archive any old files
     for fname in os.listdir(DATA_FOLDER):
         if fname.endswith(".xlsx") and fname != os.path.basename(new_file):
             shutil.move(os.path.join(DATA_FOLDER, fname), os.path.join(ARCHIVE_FOLDER, fname))
@@ -54,7 +49,7 @@ def submit():
         "Remarks": request.form.get("remarks")
     }
 
-    # Read or create DataFrame
+    # Append or create new
     if os.path.exists(new_file):
         df = pd.read_excel(new_file)
         df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
@@ -65,8 +60,17 @@ def submit():
     df.to_excel(new_file, index=False)
     apply_styling(new_file)
 
-    return f"<h3>✅ Dashboard updated for this week! <a href='/'>Go Back</a></h3>"
+    return f"<h3>✅ Dashboard updated for this week! <a href='/'>Go Back</a></h3><br><a href='/download'>📥 Download Excel</a>"
 
+@app.route("/download")
+def download():
+    excel_file = os.path.join(DATA_FOLDER, get_excel_filename())
+    if os.path.exists(excel_file):
+        return send_file(excel_file, as_attachment=True)
+    else:
+        return "<h3>⚠️ No dashboard file available for this week yet.</h3>"
+
+# Excel Styling
 def apply_styling(file_path):
     wb = load_workbook(file_path)
     ws = wb.active
@@ -97,9 +101,7 @@ def apply_styling(file_path):
 
     wb.save(file_path)
 
-import os
-
+# Run on Render with correct port
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
